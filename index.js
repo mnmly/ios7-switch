@@ -1,10 +1,18 @@
+/**
+ * Expsose `Switch`
+ */
+
 module.exports = Switch;
+
+/**
+ * Accept one checkbox input field, and convert it into iOS style switch UI.
+ */
 
 function Switch(input) {
   if ('checkbox' !== input.type) throw new Error('You can\'t make Switch out of non-checkbox input');
 
   this.input = input;
-  this.input.style.display = 'none';
+  this.input.style.display = 'none'; // hide the actual input
 
   this.el = document.createElement('div');
   this.el.className = 'ios-switch';
@@ -13,7 +21,13 @@ function Switch(input) {
   this.input.parentElement.insertBefore(this.el, this.input);
 }
 
+
+/**
+ * Toggles on/off state
+ */
+
 Switch.prototype.toggle = function() {
+
   if(this.el.classList.contains('on')){
     this.turnOff();
   } else {
@@ -23,17 +37,45 @@ Switch.prototype.toggle = function() {
   this.triggerChange();
 };
 
+
+/**
+ * Turn on
+ */
+
 Switch.prototype.turnOn = function() {
   this.el.classList.add('on');
   this.el.classList.remove('off');
   this.input.checked = true;
 };
 
+/**
+ * Turn off
+ */
+
 Switch.prototype.turnOff = function() {
   this.el.classList.remove('on');
   this.el.classList.add('off');
   this.input.checked = false;
 }
+
+
+/**
+ * Triggers DOM event programatically on the real input field
+ */
+
+Switch.prototype.triggerChange = function() {
+  if ("fireEvent" in this.input){
+    this.input.fireEvent("onchange");
+  } else {
+    var evt = document.createEvent("HTMLEvents");
+    evt.initEvent("change", false, true);
+    this.input.dispatchEvent(evt);
+  }
+};
+
+/**
+ * We need to prepare some DOM elements
+ */
 
 Switch.prototype._prepareDOM = function() {
 
@@ -52,12 +94,3 @@ Switch.prototype._prepareDOM = function() {
 
 };
 
-Switch.prototype.triggerChange = function() {
-  if ("fireEvent" in this.input){
-    this.input.fireEvent("onchange");
-  } else {
-    var evt = document.createEvent("HTMLEvents");
-    evt.initEvent("change", false, true);
-    this.input.dispatchEvent(evt);
-  }
-};
