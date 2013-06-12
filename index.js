@@ -1,0 +1,63 @@
+module.exports = Switch;
+
+function Switch(input) {
+  if ('checkbox' !== input.type) throw new Error('You can\'t make Switch out of non-checkbox input');
+
+  this.input = input;
+  this.input.style.display = 'none';
+
+  this.el = document.createElement('div');
+  this.el.className = 'ios-switch';
+  this._prepareDOM();
+
+  this.input.parentElement.insertBefore(this.el, this.input);
+}
+
+Switch.prototype.toggle = function() {
+  if(this.el.classList.contains('on')){
+    this.turnOff();
+  } else {
+    this.turnOn();
+  }
+
+  this.triggerChange();
+};
+
+Switch.prototype.turnOn = function() {
+  this.el.classList.add('on');
+  this.el.classList.remove('off');
+  this.input.checked = true;
+};
+
+Switch.prototype.turnOff = function() {
+  this.el.classList.remove('on');
+  this.el.classList.add('off');
+  this.input.checked = false;
+}
+
+Switch.prototype._prepareDOM = function() {
+
+  var onBackground = document.createElement('div');
+  onBackground.className = 'on-background background-fill';
+
+  var stateBackground = document.createElement('div');
+  stateBackground.className = 'state-background background-fill';
+  
+  var handle = document.createElement('div');
+  handle.className = 'handle';
+    
+  this.el.appendChild(onBackground);
+  this.el.appendChild(stateBackground);
+  this.el.appendChild(handle);
+
+};
+
+Switch.prototype.triggerChange = function() {
+  if ("fireEvent" in this.input){
+    this.input.fireEvent("onchange");
+  } else {
+    var evt = document.createEvent("HTMLEvents");
+    evt.initEvent("change", false, true);
+    this.input.dispatchEvent(evt);
+  }
+};
