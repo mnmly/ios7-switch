@@ -26,7 +26,19 @@
 
     $ component install mnmly/ios7-switch
 
-## API
+## Example
+
+```javascript
+var Switch = require('ios7-switch')
+  , checkbox = document.querySelector('input')
+  , mySwitch = new Switch(checkbox);
+
+// When `mySwitch` is clicked toggle state
+mySwitch.el.addEventListener('click', function(e){
+  e.preventDefault();
+  mySwitch.toggle();
+}, false)
+```
 
    
 
