@@ -19,6 +19,10 @@ function Switch(input) {
   this._prepareDOM();
 
   this.input.parentElement.insertBefore(this.el, this.input);
+
+  // read initial state and set Switch state accordingly
+  if (this.input.checked) this.turnOn()
+  
 }
 
 
