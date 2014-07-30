@@ -22,9 +22,44 @@ function Switch(input) {
 
   // read initial state and set Switch state accordingly
   if (this.input.checked) this.turnOn()
-  
+
 }
 
+/**
+ * Cross Browser add class method
+ */
+
+Switch.addClass = function( el, className) {
+  if (el.classList) {
+    el.classList.add(className);
+  } else {
+    el.className += ' ' + className;
+  }
+};
+
+/**
+ * Cross Browser remove class method
+ */
+
+Switch.removeClass = function( el, className) {
+  if (el.classList) {
+    el.classList.remove(className);
+  } else {
+    el.className = el.className.replace(new RegExp('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
+  }
+};
+
+/**
+ * Cross Browser has class method
+ */
+
+Switch.hasClass = function(el, className) {
+  if (el.classList) {
+    return el.classList.contains(className);
+  } else {
+    return new RegExp('(^| )' + className + '( |$)', 'gi').test(el.className);
+  }
+};
 
 /**
  * Toggles on/off state
@@ -32,7 +67,7 @@ function Switch(input) {
 
 Switch.prototype.toggle = function() {
 
-  if(this.el.classList.contains('on')){
+  if( Switch.hasClass(this.el, 'on') ){
     this.turnOff();
   } else {
     this.turnOn();
@@ -47,8 +82,8 @@ Switch.prototype.toggle = function() {
  */
 
 Switch.prototype.turnOn = function() {
-  this.el.classList.add('on');
-  this.el.classList.remove('off');
+  Switch.addClass(this.el, 'on');
+  Switch.removeClass(this.el, 'off');
   this.input.checked = true;
 };
 
@@ -57,8 +92,8 @@ Switch.prototype.turnOn = function() {
  */
 
 Switch.prototype.turnOff = function() {
-  this.el.classList.remove('on');
-  this.el.classList.add('off');
+  Switch.removeClass(this.el, 'on');
+  Switch.addClass(this.el, 'off');
   this.input.checked = false;
 }
 
@@ -88,10 +123,10 @@ Switch.prototype._prepareDOM = function() {
 
   var stateBackground = document.createElement('div');
   stateBackground.className = 'state-background background-fill';
-  
+
   var handle = document.createElement('div');
   handle.className = 'handle';
-    
+
   this.el.appendChild(onBackground);
   this.el.appendChild(stateBackground);
   this.el.appendChild(handle);
